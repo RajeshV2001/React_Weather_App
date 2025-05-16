@@ -3,20 +3,23 @@ import './App.css';
 import { getWeatherData } from "./api/index.js";
 import { Days } from "./components/Days.jsx";
 import { WeatherInfo } from "./components/WeatherInfo.jsx";
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 function App() {
   const [location, setLocation] = useState("India");
   const [buttonClick, setButtonClick] = useState(false);
+  const [refresh,setRefresh] = useState(false);
   const [data, setData] = useState(null);
 
-  useEffect(() => {
-    getWeatherData(location).then((data) => { setData(data) });
+  useEffect(() => {  
+    getWeatherData(location).then((data) => { 
+      setData(data);
+    });
     return () => {
       setButtonClick(false);
+      setRefresh(false);
     }
-  }, [buttonClick]);
-  console.log(data);
+  }, [buttonClick,refresh]);
 
   return (
     <>
@@ -38,7 +41,9 @@ function App() {
             <div className="w-full sm:w-auto">
               <button
                 className="w-full sm:w-[10vh] bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg p-2 font-semibold transform hover:scale-105 transition-all duration-300 shadow-lg"
-                onClick={() => setButtonClick(true)}
+                onClick={() => {
+                  setButtonClick(true)
+                }}
               >
                 Search
               </button>
@@ -50,7 +55,15 @@ function App() {
               <h1 className="flex font-bold text-2xl sm:text-4xl text-gray-300">
                 {data ? data.location.country : ""}, {data ? data.location.name : ""}
               </h1>
-              <RefreshCcw className="text-gray-600 hover:text-gray-400" />
+              <button
+              className='p-2 ronded-full transition'
+              onClick={() => {
+                    setRefresh(true)
+              }}>
+                <RefreshCw
+                  className = {`text-gray-500 hover:text-gray-300 transition-transform ${refresh ? "animate-spin" : ""}`}
+                />
+             </button>
             </div>
             <h3 className="font-semibold text-sm text-gray-400">
               {(() => {
